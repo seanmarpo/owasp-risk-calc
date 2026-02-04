@@ -158,11 +158,12 @@
             }
 
             .risk-label {
-                font-size: 0.9rem;
+                font-size: 1.5rem;
+                font-weight: 700;
                 text-transform: uppercase;
-                letter-spacing: 1px;
-                color: var(--text-secondary);
-                margin-bottom: 10px;
+                letter-spacing: 2px;
+                color: var(--text);
+                margin-bottom: 15px;
             }
 
             .risk-value {
@@ -594,26 +595,6 @@
                     </div>
 
                     <div class="card">
-                        <h3 class="card-title">Breakdown</h3>
-                        <div class="factor-grid">
-                            <div class="factor-item">
-                                <span class="factor-label">Impact</span>
-                                <span class="factor-value" id="impactDisplay"
-                                    >0</span
-                                >
-                            </div>
-                            <div class="factor-item">
-                                <span class="factor-label">Likelihood</span>
-                                <span
-                                    class="factor-value"
-                                    id="likelihoodDisplay"
-                                    >0</span
-                                >
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="card">
                         <h3 class="card-title">Share Assessment</h3>
                         <div class="share-section">
                             <div class="share-label">Shareable Link:</div>
@@ -894,9 +875,6 @@
 
                 // Update displays
                 document.getElementById("riskValue").textContent = riskScore;
-                document.getElementById("impactDisplay").textContent = impact;
-                document.getElementById("likelihoodDisplay").textContent =
-                    likelihood;
                 document.getElementById("riskFormula").textContent =
                     `Impact × Likelihood = ${impact} × ${likelihood}`;
 
