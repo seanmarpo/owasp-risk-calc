@@ -949,15 +949,25 @@
                 skill: [
                     [0, "N/A", "opt-green"],
                     [1, "Security penetration skills", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "Network and programming skills", "opt-blue"],
+                    [4, "", "opt-blue"],
                     [5, "Advanced computer user", "opt-yellow"],
                     [6, "Some technical skills", "opt-orange"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "No technical skills", "opt-red"],
                 ],
                 motive: [
                     [0, "N/A", "opt-green"],
                     [1, "Low or no reward", "opt-green"],
+                    [2, "", "opt-green"],
+                    [3, "", "opt-blue"],
                     [4, "Possible reward", "opt-yellow"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-orange"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "High reward", "opt-red"],
                 ],
                 opportunity: [
@@ -966,80 +976,130 @@
                         "Full access or expensive resources required",
                         "opt-green",
                     ],
+                    [1, "", "opt-green"],
+                    [2, "", "opt-blue"],
+                    [3, "", "opt-blue"],
                     [4, "Special access or resources required", "opt-yellow"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-orange"],
                     [7, "Some access or resources required", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "No access or resources required", "opt-red"],
                 ],
                 size: [
                     [0, "N/A", "opt-green"],
+                    [1, "", "opt-green"],
                     [2, "Developers or system administrators", "opt-blue"],
+                    [3, "", "opt-blue"],
                     [4, "Intranet users", "opt-yellow"],
                     [5, "Partners", "opt-yellow"],
                     [6, "Authenticated users", "opt-orange"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "Anonymous Internet users", "opt-red"],
                 ],
                 discovery: [
                     [0, "N/A", "opt-green"],
                     [1, "Practically impossible", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "Difficult", "opt-blue"],
+                    [4, "", "opt-blue"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-yellow"],
                     [7, "Easy", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "Automated tools available", "opt-red"],
                 ],
                 exploit: [
                     [0, "N/A", "opt-green"],
                     [1, "Theoretical", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "Difficult", "opt-blue"],
+                    [4, "", "opt-blue"],
                     [5, "Easy", "opt-yellow"],
+                    [6, "", "opt-yellow"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "Automated tools available", "opt-red"],
                 ],
                 awareness: [
                     [0, "N/A", "opt-green"],
                     [1, "Unknown", "opt-green"],
+                    [2, "", "opt-green"],
+                    [3, "", "opt-blue"],
                     [4, "Hidden", "opt-yellow"],
+                    [5, "", "opt-yellow"],
                     [6, "Obvious", "opt-orange"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "Public knowledge", "opt-red"],
                 ],
                 detection: [
                     [0, "N/A", "opt-green"],
                     [1, "Active detection in application", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "Logged and reviewed", "opt-blue"],
+                    [4, "", "opt-blue"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-yellow"],
+                    [7, "", "opt-orange"],
                     [8, "Logged without review", "opt-red"],
                     [9, "Not logged", "opt-red"],
                 ],
                 confidentiality: [
                     [0, "N/A", "opt-green"],
+                    [1, "", "opt-green"],
                     [2, "Minimal non-sensitive data disclosed", "opt-blue"],
+                    [3, "", "opt-blue"],
+                    [4, "", "opt-yellow"],
+                    [5, "", "opt-yellow"],
                     [
                         6,
                         "Minimal critical or extensive non-sensitive data",
                         "opt-orange",
                     ],
                     [7, "Extensive critical data disclosed", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "All data disclosed", "opt-red"],
                 ],
                 integrity: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal slightly corrupt data", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "Minimal seriously corrupt data", "opt-blue"],
+                    [4, "", "opt-blue"],
                     [5, "Extensive slightly corrupt data", "opt-yellow"],
+                    [6, "", "opt-yellow"],
                     [7, "Extensive seriously corrupt data", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "All data totally corrupt", "opt-red"],
                 ],
                 availability: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal secondary services interrupted", "opt-green"],
+                    [2, "", "opt-green"],
+                    [3, "", "opt-blue"],
+                    [4, "", "opt-blue"],
                     [
                         5,
                         "Minimal primary or extensive secondary services interrupted",
                         "opt-yellow",
                     ],
+                    [6, "", "opt-yellow"],
                     [7, "Extensive primary services interrupted", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "All services completely lost", "opt-red"],
                 ],
                 accountability: [
                     [0, "N/A", "opt-green"],
                     [1, "Fully traceable", "opt-green"],
+                    [2, "", "opt-green"],
+                    [3, "", "opt-blue"],
+                    [4, "", "opt-blue"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-yellow"],
                     [7, "Possibly traceable", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "Completely anonymous", "opt-red"],
                 ],
                 financial: [
@@ -1049,28 +1109,49 @@
                         "Less than the cost to fix the vulnerability",
                         "opt-green",
                     ],
+                    [2, "", "opt-green"],
                     [3, "Minor effect on annual profit", "opt-blue"],
+                    [4, "", "opt-blue"],
+                    [5, "", "opt-yellow"],
+                    [6, "", "opt-yellow"],
                     [7, "Significant effect on annual profit", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "Bankruptcy", "opt-red"],
                 ],
                 reputation: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal damage", "opt-green"],
+                    [2, "", "opt-green"],
+                    [3, "", "opt-blue"],
                     [4, "Loss of major accounts", "opt-yellow"],
                     [5, "Loss of goodwill", "opt-yellow"],
+                    [6, "", "opt-orange"],
+                    [7, "", "opt-orange"],
+                    [8, "", "opt-red"],
                     [9, "Brand damage", "opt-red"],
                 ],
                 noncompliance: [
                     [0, "N/A", "opt-green"],
+                    [1, "", "opt-green"],
                     [2, "Minor violation", "opt-blue"],
+                    [3, "", "opt-blue"],
+                    [4, "", "opt-yellow"],
                     [5, "Clear violation", "opt-yellow"],
+                    [6, "", "opt-orange"],
                     [7, "High profile violation", "opt-orange"],
+                    [8, "", "opt-red"],
+                    [9, "", "opt-red"],
                 ],
                 privacy: [
                     [0, "N/A", "opt-green"],
+                    [1, "", "opt-green"],
+                    [2, "", "opt-green"],
                     [3, "One individual", "opt-blue"],
+                    [4, "", "opt-blue"],
                     [5, "Hundreds of people", "opt-yellow"],
+                    [6, "", "opt-yellow"],
                     [7, "Thousands of people", "opt-orange"],
+                    [8, "", "opt-orange"],
                     [9, "Millions of people", "opt-red"],
                 ],
             };
@@ -1299,8 +1380,31 @@
                 const tifSum = sumWeight(techIds);
                 const bifSum = sumWeight(bizIds);
 
-                const lf = (tafSum + vfSum) / 2;
-                const ifVal = (tifSum + bifSum) / 2;
+                // Calculate likelihood factor - only average non-zero groups
+                let lfCount = 0;
+                let lfTotal = 0;
+                if (tafSum > 0) {
+                    lfTotal += tafSum;
+                    lfCount++;
+                }
+                if (vfSum > 0) {
+                    lfTotal += vfSum;
+                    lfCount++;
+                }
+                const lf = lfCount > 0 ? lfTotal / lfCount : 0;
+
+                // Calculate impact factor - only average non-zero groups
+                let ifCount = 0;
+                let ifTotal = 0;
+                if (tifSum > 0) {
+                    ifTotal += tifSum;
+                    ifCount++;
+                }
+                if (bifSum > 0) {
+                    ifTotal += bifSum;
+                    ifCount++;
+                }
+                const ifVal = ifCount > 0 ? ifTotal / ifCount : 0;
 
                 const tafLevel = scoreLabelSum(tafSum);
                 const vfLevel = scoreLabelSum(vfSum);
