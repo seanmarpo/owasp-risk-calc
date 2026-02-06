@@ -898,6 +898,23 @@
 
                     <div class="actions-and-explainer">
                         <button id="resetBtn">Reset All Factors</button>
+                        <div
+                            style="
+                                background: var(--card-bg);
+                                padding: 1em;
+                                border-radius: 8px;
+                                border: 2px solid var(--primary-color);
+                                margin-bottom: 1em;
+                            "
+                        >
+                            <strong style="color: var(--primary-color)"
+                                >💡 Tip:</strong
+                            >
+                            If your situation falls between two examples, choose
+                            an in-between factor value. For example, if your
+                            case is slightly more severe than level 3 but not
+                            quite level 5, you can select level 4.
+                        </div>
                         <div class="explainer-section">
                             <select id="explainer" class="form-select">
                                 <option value="">
@@ -944,6 +961,26 @@
                 ...techIds,
                 ...bizIds,
             ];
+
+            // Risk level thresholds as constants
+            const RISK_THRESHOLDS = {
+                HIGH: 6.0,
+                MEDIUM: 3.0,
+            };
+
+            // Cache for DOM elements to avoid repeated queries
+            const domCache = {
+                elements: {},
+                get(id) {
+                    if (!this.elements[id]) {
+                        this.elements[id] = document.getElementById(id);
+                    }
+                    return this.elements[id];
+                },
+                clear() {
+                    this.elements = {};
+                },
+            };
 
             const factorOptions = {
                 skill: [
@@ -1283,7 +1320,7 @@
              * @returns {number} The weighted value (0-2.25)
              */
             function getWeight(id) {
-                const el = document.getElementById(id);
+                const el = domCache.get(id);
                 if (!el) return 0;
                 const val = Number(el.value);
                 // Ensure value is within valid range (0-9)
@@ -1305,8 +1342,8 @@
              */
             function scoreLabelSum(w) {
                 if (w === 0) return "None";
-                if (w >= 6.0) return "High";
-                if (w >= 3.0) return "Medium";
+                if (w >= RISK_THRESHOLDS.HIGH) return "High";
+                if (w >= RISK_THRESHOLDS.MEDIUM) return "Medium";
                 if (w > 0) return "Low";
                 return "None";
             }
@@ -1321,11 +1358,11 @@
              */
             function calculateOverallRisk(lf, ifVal) {
                 let lfLevel = "Low";
-                if (lf >= 6.0) lfLevel = "High";
-                else if (lf >= 3.0) lfLevel = "Medium";
+                if (lf >= RISK_THRESHOLDS.HIGH) lfLevel = "High";
+                else if (lf >= RISK_THRESHOLDS.MEDIUM) lfLevel = "Medium";
                 let ifLevel = "Low";
-                if (ifVal >= 6.0) ifLevel = "High";
-                else if (ifVal >= 3.0) ifLevel = "Medium";
+                if (ifVal >= RISK_THRESHOLDS.HIGH) ifLevel = "High";
+                else if (ifVal >= RISK_THRESHOLDS.MEDIUM) ifLevel = "Medium";
                 if (lfLevel === "Low" && ifLevel === "Low") return "None";
                 if (lfLevel === "Low" && ifLevel === "Medium") return "Low";
                 if (lfLevel === "Low" && ifLevel === "High") return "Medium";
@@ -1415,44 +1452,39 @@
                 const overallRisk = calculateOverallRisk(lf, ifVal);
 
                 updateRiskLabel(
-                    document.getElementById("tafLabel"),
+                    domCache.get("tafLabel"),
                     tafLevel,
                     "TAF",
                     tafSum,
                 );
+                updateRiskLabel(domCache.get("vfLabel"), vfLevel, "VF", vfSum);
                 updateRiskLabel(
-                    document.getElementById("vfLabel"),
-                    vfLevel,
-                    "VF",
-                    vfSum,
-                );
-                updateRiskLabel(
-                    document.getElementById("tifLabel"),
+                    domCache.get("tifLabel"),
                     tifLevel,
                     "TIF",
                     tifSum,
                 );
                 updateRiskLabel(
-                    document.getElementById("bifLabel"),
+                    domCache.get("bifLabel"),
                     bifLevel,
                     "BIF",
                     bifSum,
                 );
 
                 updateSummaryLabel(
-                    document.getElementById("lfLabelCenter"),
+                    domCache.get("lfLabelCenter"),
                     lfLevel,
                     lf,
                     "LF",
                 );
                 updateSummaryLabel(
-                    document.getElementById("ifLabelCenter"),
+                    domCache.get("ifLabelCenter"),
                     ifLevel,
                     ifVal,
                     "IF",
                 );
                 updateSummaryLabel(
-                    document.getElementById("riskSeverityLabel"),
+                    domCache.get("riskSeverityLabel"),
                     overallRisk,
                     0,
                 );
@@ -1471,14 +1503,14 @@
                 if (short) {
                     return allFactorIds
                         .map((id) => {
-                            const el = document.getElementById(id);
+                            const el = domCache.get(id);
                             return el ? el.value : "0";
                         })
                         .join("");
                 }
                 return allFactorIds
                     .map((id) => {
-                        const el = document.getElementById(id);
+                        const el = domCache.get(id);
                         const value = el ? el.value : "0";
                         return `${fieldToCode[id]}:${value}`;
                     })
@@ -1492,10 +1524,8 @@
                 const fullVector = buildVector(false);
                 const shortVector = buildVector(true);
 
-                const scoreVectorText =
-                    document.getElementById("scoreVectorText");
-                const shortVectorText =
-                    document.getElementById("shortVectorText");
+                const scoreVectorText = domCache.get("scoreVectorText");
+                const shortVectorText = domCache.get("shortVectorText");
 
                 if (scoreVectorText) {
                     scoreVectorText.textContent = fullVector;
@@ -1511,8 +1541,8 @@
             function updateVectorLinks() {
                 const fullVector = buildVector(false);
                 const shortVector = buildVector(true);
-                const fullLink = document.getElementById("scoreVectorLink");
-                const shortLink = document.getElementById("shortVectorLink");
+                const fullLink = domCache.get("scoreVectorLink");
+                const shortLink = domCache.get("shortVectorLink");
 
                 if (fullLink) {
                     fullLink.href = `#owasp-risk-rating-full=${fullVector}`;
@@ -1563,14 +1593,15 @@
                         const numValue = parseInt(value, 10);
 
                         // Validate field exists and value is valid
+                        const el = domCache.get(field);
                         if (
                             field &&
-                            document.getElementById(field) &&
+                            el &&
                             !isNaN(numValue) &&
                             numValue >= 0 &&
                             numValue <= 9
                         ) {
-                            document.getElementById(field).value = numValue;
+                            el.value = numValue;
                             valuesSet = true;
                         }
                     }
@@ -1585,7 +1616,7 @@
                         /^[0-9]{16}$/.test(shortVector)
                     ) {
                         allFactorIds.forEach((id, i) => {
-                            const el = document.getElementById(id);
+                            const el = domCache.get(id);
                             const digitValue = parseInt(shortVector[i], 10);
                             // Double-check value is in valid range
                             if (el && digitValue >= 0 && digitValue <= 9) {
@@ -1598,7 +1629,7 @@
 
                 if (valuesSet) {
                     allFactorIds.forEach((id) => {
-                        const el = document.getElementById(id);
+                        const el = domCache.get(id);
                         if (el) applySelectColor(el);
                     });
                     calculateAndRender();
@@ -1715,15 +1746,18 @@
              * @param {Array} options - Array of [value, text, className] tuples
              */
             function populateSelect(id, options) {
-                const select = document.getElementById(id);
+                const select = domCache.get(id);
                 if (!select) return;
+                // Use DocumentFragment for better performance when adding multiple options
+                const fragment = document.createDocumentFragment();
                 options.forEach(([value, text, className]) => {
                     const option = document.createElement("option");
                     option.value = value;
                     option.textContent = `${value} - ${text}`;
                     if (className) option.className = className;
-                    select.appendChild(option);
+                    fragment.appendChild(option);
                 });
+                select.appendChild(fragment);
             }
 
             /**
@@ -1748,7 +1782,7 @@
              * Populates the explainer dropdown with all risk factors
              */
             function populateExplainer() {
-                const explainerSelect = document.getElementById("explainer");
+                const explainerSelect = domCache.get("explainer");
                 if (!explainerSelect) return;
 
                 const createFactorLabels = (ids, prefix) => {
@@ -1770,19 +1804,22 @@
                     ...createFactorLabels(bizIds, "Business Impact"),
                 ];
 
+                // Use DocumentFragment for better performance
+                const fragment = document.createDocumentFragment();
                 factorLabels.forEach(([id, label]) => {
                     const option = document.createElement("option");
                     option.value = id;
                     option.textContent = label;
-                    explainerSelect.appendChild(option);
+                    fragment.appendChild(option);
                 });
+                explainerSelect.appendChild(fragment);
             }
 
             /**
              * Updates the explanation text based on the selected risk factor
              */
             function updateExplainerNote() {
-                const explainerEl = document.getElementById("explainer");
+                const explainerEl = domCache.get("explainer");
                 if (!explainerEl) return;
                 const selectedId = explainerEl.value;
                 const noteEl = document.querySelector(".example-note");
@@ -1802,8 +1839,10 @@
                 const factorLevels = factorOptions[selectedId];
                 const detailedExplanations = explanations[selectedId] || {};
 
+                // Use DocumentFragment for better performance
+                const fragment = document.createDocumentFragment();
                 factorLevels
-                    .filter(([value, text]) => text !== "N/A")
+                    .filter(([value, text]) => text !== "N/A" && text !== "")
                     .forEach(([value, text]) => {
                         const itemDiv = document.createElement("div");
                         itemDiv.className = "explanation-item";
@@ -1823,15 +1862,16 @@
                             itemDiv.appendChild(detailDiv);
                         }
 
-                        noteEl.appendChild(itemDiv);
+                        fragment.appendChild(itemDiv);
                     });
+                noteEl.appendChild(fragment);
             }
 
             /**
              * Initializes the theme system and sets up the theme toggle button
              */
             function initTheme() {
-                const toggleBtn = document.getElementById("theme-toggle");
+                const toggleBtn = domCache.get("theme-toggle");
                 if (!toggleBtn) return;
 
                 // Try to get saved theme from localStorage with fallback
@@ -1907,7 +1947,8 @@
                 initTheme();
 
                 allFactorIds.forEach((id) => {
-                    const el = document.getElementById(id);
+                    const el = domCache.get(id);
+                    if (!el) return;
                     el.addEventListener("change", () => {
                         applySelectColor(el);
                         calculateAndRender();
@@ -1915,32 +1956,41 @@
                     });
                 });
 
-                document
-                    .getElementById("resetBtn")
-                    .addEventListener("click", () => {
+                const resetBtn = domCache.get("resetBtn");
+                if (resetBtn) {
+                    resetBtn.addEventListener("click", () => {
                         allFactorIds.forEach((id) => {
-                            const el = document.getElementById(id);
-                            el.value = 0;
-                            applySelectColor(el);
+                            const el = domCache.get(id);
+                            if (el) {
+                                el.value = 0;
+                                applySelectColor(el);
+                            }
                         });
                         calculateAndRender();
                         updateBrowserUrl();
                     });
+                }
 
-                document
-                    .getElementById("explainer")
-                    .addEventListener("change", updateExplainerNote);
+                const explainerSelect = domCache.get("explainer");
+                if (explainerSelect) {
+                    explainerSelect.addEventListener(
+                        "change",
+                        updateExplainerNote,
+                    );
+                }
 
                 const copyHandler = function (event) {
                     event.preventDefault();
                     copyToClipboard(this.href, this);
                 };
-                document
-                    .getElementById("scoreVectorLink")
-                    .addEventListener("click", copyHandler);
-                document
-                    .getElementById("shortVectorLink")
-                    .addEventListener("click", copyHandler);
+                const scoreVectorLink = domCache.get("scoreVectorLink");
+                const shortVectorLink = domCache.get("shortVectorLink");
+                if (scoreVectorLink) {
+                    scoreVectorLink.addEventListener("click", copyHandler);
+                }
+                if (shortVectorLink) {
+                    shortVectorLink.addEventListener("click", copyHandler);
+                }
 
                 window.addEventListener("hashchange", parseVectorsFromUrl);
 
