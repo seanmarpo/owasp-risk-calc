@@ -1995,6 +1995,11 @@
                 window.addEventListener("hashchange", parseVectorsFromUrl);
 
                 if (!parseVectorsFromUrl()) {
+                    // Apply initial colors to all selects
+                    allFactorIds.forEach((id) => {
+                        const el = domCache.get(id);
+                        if (el) applySelectColor(el);
+                    });
                     calculateAndRender();
                 }
             });
