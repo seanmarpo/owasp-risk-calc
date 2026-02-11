@@ -5,11 +5,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta
             name="description"
-            content="An interactive tool to assess security risks based on the OWASP Risk Rating Methodology - Rewrite by Q2 Technologies"
+            content="An interactive tool to assess security risks based on the OWASP Risk Rating Methodology"
         />
         <meta
             name="keywords"
-            content="OWASP Risk Assessment, OWASP Risk Rating Calculator, OWASP Risk Rating Tool, Cybersecurity, Risk Analysis,  Q2 Technologies"
+            content="OWASP Risk Assessment, OWASP Risk Rating Calculator, OWASP Risk Rating Tool, Cybersecurity, Risk Analysis"
         />
         <meta name="robots" content="index, follow" />
         <meta property="og:site_name" content="OWASP Risk Rating Calculator" />
@@ -118,12 +118,6 @@
                 font-weight: 700;
                 letter-spacing: -0.025em;
                 margin: 0;
-            }
-
-            .header p {
-                font-size: 1.05rem;
-                color: var(--text-secondary);
-                margin-top: 0.5rem;
             }
 
             .theme-toggle {
@@ -246,10 +240,7 @@
                 max-width: 100%;
                 height: auto;
             }
-            #radarChart .grid-line {
-                stroke: var(--border-color);
-                stroke-width: 1;
-            }
+            #radarChart .grid-line,
             #radarChart .axis-line {
                 stroke: var(--border-color);
                 stroke-width: 1;
@@ -898,23 +889,6 @@
 
                     <div class="actions-and-explainer">
                         <button id="resetBtn">Reset All Factors</button>
-                        <div
-                            style="
-                                background: var(--card-bg);
-                                padding: 1em;
-                                border-radius: 8px;
-                                border: 2px solid var(--primary-color);
-                                margin-bottom: 1em;
-                            "
-                        >
-                            <strong style="color: var(--primary-color)"
-                                >💡 Tip:</strong
-                            >
-                            If your situation falls between two examples, choose
-                            an in-between factor value. For example, if your
-                            case is slightly more severe than level 3 but not
-                            quite level 5, you can select level 4.
-                        </div>
                         <div class="explainer-section">
                             <select id="explainer" class="form-select">
                                 <option value="">
@@ -965,7 +939,7 @@
             // Risk level thresholds as constants
             const RISK_THRESHOLDS = {
                 HIGH: 6.0,
-                MEDIUM: 3.0,
+                MEDIUM: 4.0,
             };
 
             // Cache for DOM elements to avoid repeated queries
@@ -986,157 +960,98 @@
                 skill: [
                     [0, "N/A", "opt-green"],
                     [1, "Security penetration skills", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "Network and programming skills", "opt-blue"],
-                    [4, "", "opt-blue"],
                     [5, "Advanced computer user", "opt-yellow"],
                     [6, "Some technical skills", "opt-orange"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "No technical skills", "opt-red"],
                 ],
                 motive: [
                     [0, "N/A", "opt-green"],
                     [1, "Low or no reward", "opt-green"],
-                    [2, "", "opt-green"],
-                    [3, "", "opt-blue"],
                     [4, "Possible reward", "opt-yellow"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-orange"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "High reward", "opt-red"],
                 ],
                 opportunity: [
+                    [0, "N/A", "opt-green"],
                     [
-                        0,
+                        1,
                         "Full access or expensive resources required",
                         "opt-green",
                     ],
-                    [1, "", "opt-green"],
-                    [2, "", "opt-blue"],
-                    [3, "", "opt-blue"],
                     [4, "Special access or resources required", "opt-yellow"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-orange"],
                     [7, "Some access or resources required", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "No access or resources required", "opt-red"],
                 ],
                 size: [
                     [0, "N/A", "opt-green"],
-                    [1, "", "opt-green"],
                     [2, "Developers or system administrators", "opt-blue"],
-                    [3, "", "opt-blue"],
                     [4, "Intranet users", "opt-yellow"],
                     [5, "Partners", "opt-yellow"],
                     [6, "Authenticated users", "opt-orange"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "Anonymous Internet users", "opt-red"],
                 ],
                 discovery: [
                     [0, "N/A", "opt-green"],
                     [1, "Practically impossible", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "Difficult", "opt-blue"],
-                    [4, "", "opt-blue"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-yellow"],
                     [7, "Easy", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "Automated tools available", "opt-red"],
                 ],
                 exploit: [
                     [0, "N/A", "opt-green"],
                     [1, "Theoretical", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "Difficult", "opt-blue"],
-                    [4, "", "opt-blue"],
                     [5, "Easy", "opt-yellow"],
-                    [6, "", "opt-yellow"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "Automated tools available", "opt-red"],
                 ],
                 awareness: [
                     [0, "N/A", "opt-green"],
                     [1, "Unknown", "opt-green"],
-                    [2, "", "opt-green"],
-                    [3, "", "opt-blue"],
                     [4, "Hidden", "opt-yellow"],
-                    [5, "", "opt-yellow"],
                     [6, "Obvious", "opt-orange"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "Public knowledge", "opt-red"],
                 ],
                 detection: [
                     [0, "N/A", "opt-green"],
                     [1, "Active detection in application", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "Logged and reviewed", "opt-blue"],
-                    [4, "", "opt-blue"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-yellow"],
-                    [7, "", "opt-orange"],
                     [8, "Logged without review", "opt-red"],
                     [9, "Not logged", "opt-red"],
                 ],
                 confidentiality: [
                     [0, "N/A", "opt-green"],
-                    [1, "", "opt-green"],
                     [2, "Minimal non-sensitive data disclosed", "opt-blue"],
-                    [3, "", "opt-blue"],
-                    [4, "", "opt-yellow"],
-                    [5, "", "opt-yellow"],
                     [
                         6,
                         "Minimal critical or extensive non-sensitive data",
                         "opt-orange",
                     ],
                     [7, "Extensive critical data disclosed", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "All data disclosed", "opt-red"],
                 ],
                 integrity: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal slightly corrupt data", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "Minimal seriously corrupt data", "opt-blue"],
-                    [4, "", "opt-blue"],
                     [5, "Extensive slightly corrupt data", "opt-yellow"],
-                    [6, "", "opt-yellow"],
                     [7, "Extensive seriously corrupt data", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "All data totally corrupt", "opt-red"],
                 ],
                 availability: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal secondary services interrupted", "opt-green"],
-                    [2, "", "opt-green"],
-                    [3, "", "opt-blue"],
-                    [4, "", "opt-blue"],
                     [
                         5,
                         "Minimal primary or extensive secondary services interrupted",
                         "opt-yellow",
                     ],
-                    [6, "", "opt-yellow"],
                     [7, "Extensive primary services interrupted", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "All services completely lost", "opt-red"],
                 ],
                 accountability: [
                     [0, "N/A", "opt-green"],
                     [1, "Fully traceable", "opt-green"],
-                    [2, "", "opt-green"],
-                    [3, "", "opt-blue"],
-                    [4, "", "opt-blue"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-yellow"],
                     [7, "Possibly traceable", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "Completely anonymous", "opt-red"],
                 ],
                 financial: [
@@ -1146,49 +1061,28 @@
                         "Less than the cost to fix the vulnerability",
                         "opt-green",
                     ],
-                    [2, "", "opt-green"],
                     [3, "Minor effect on annual profit", "opt-blue"],
-                    [4, "", "opt-blue"],
-                    [5, "", "opt-yellow"],
-                    [6, "", "opt-yellow"],
                     [7, "Significant effect on annual profit", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "Bankruptcy", "opt-red"],
                 ],
                 reputation: [
                     [0, "N/A", "opt-green"],
                     [1, "Minimal damage", "opt-green"],
-                    [2, "", "opt-green"],
-                    [3, "", "opt-blue"],
                     [4, "Loss of major accounts", "opt-yellow"],
                     [5, "Loss of goodwill", "opt-yellow"],
-                    [6, "", "opt-orange"],
-                    [7, "", "opt-orange"],
-                    [8, "", "opt-red"],
                     [9, "Brand damage", "opt-red"],
                 ],
                 noncompliance: [
                     [0, "N/A", "opt-green"],
-                    [1, "", "opt-green"],
                     [2, "Minor violation", "opt-blue"],
-                    [3, "", "opt-blue"],
-                    [4, "", "opt-yellow"],
                     [5, "Clear violation", "opt-yellow"],
-                    [6, "", "opt-orange"],
                     [7, "High profile violation", "opt-orange"],
-                    [8, "", "opt-red"],
-                    [9, "", "opt-red"],
                 ],
                 privacy: [
                     [0, "N/A", "opt-green"],
-                    [1, "", "opt-green"],
-                    [2, "", "opt-green"],
                     [3, "One individual", "opt-blue"],
-                    [4, "", "opt-blue"],
                     [5, "Hundreds of people", "opt-yellow"],
-                    [6, "", "opt-yellow"],
                     [7, "Thousands of people", "opt-orange"],
-                    [8, "", "opt-orange"],
                     [9, "Millions of people", "opt-red"],
                 ],
             };
@@ -1325,15 +1219,29 @@
                 const val = Number(el.value);
                 // Ensure value is within valid range (0-9)
                 if (isNaN(val) || val < 0 || val > 9) return 0;
-                return val * 0.25;
+                return val;
             }
             /**
-             * Sums the weighted values for multiple risk factors
+             * Calculates the average of non-zero risk factors, then applies weighting
              * @param {string[]} ids - Array of element IDs
-             * @returns {number} Total weighted sum
+             * @returns {number} Weighted average (only counting non-zero values)
              */
             function sumWeight(ids) {
-                return ids.reduce((s, id) => s + getWeight(id), 0);
+                let sum = 0;
+                let count = 0;
+                ids.forEach((id) => {
+                    const el = domCache.get(id);
+                    if (!el) return;
+                    const val = Number(el.value);
+                    // Only include non-zero values (skip N/A)
+                    if (val > 0 && val <= 9) {
+                        sum += val;
+                        count++;
+                    }
+                });
+                // Calculate average of non-zero factors
+                if (count === 0) return 0;
+                return sum / count;
             }
             /**
              * Converts a weighted score to a risk level label
@@ -1356,24 +1264,20 @@
              * @param {number} ifVal - Impact factor
              * @returns {string} Overall risk level: "None", "Low", "Medium", "High", or "Critical"
              */
+            const RISK_MATRIX = {
+                Low: { Low: "None", Medium: "Low", High: "Medium" },
+                Medium: { Low: "Low", Medium: "Medium", High: "High" },
+                High: { Low: "Medium", Medium: "High", High: "Critical" },
+            };
+
             function calculateOverallRisk(lf, ifVal) {
-                let lfLevel = "Low";
-                if (lf >= RISK_THRESHOLDS.HIGH) lfLevel = "High";
-                else if (lf >= RISK_THRESHOLDS.MEDIUM) lfLevel = "Medium";
-                let ifLevel = "Low";
-                if (ifVal >= RISK_THRESHOLDS.HIGH) ifLevel = "High";
-                else if (ifVal >= RISK_THRESHOLDS.MEDIUM) ifLevel = "Medium";
-                if (lfLevel === "Low" && ifLevel === "Low") return "None";
-                if (lfLevel === "Low" && ifLevel === "Medium") return "Low";
-                if (lfLevel === "Low" && ifLevel === "High") return "Medium";
-                if (lfLevel === "Medium" && ifLevel === "Low") return "Low";
-                if (lfLevel === "Medium" && ifLevel === "Medium")
-                    return "Medium";
-                if (lfLevel === "Medium" && ifLevel === "High") return "High";
-                if (lfLevel === "High" && ifLevel === "Low") return "Medium";
-                if (lfLevel === "High" && ifLevel === "Medium") return "High";
-                if (lfLevel === "High" && ifLevel === "High") return "Critical";
-                return "None";
+                const getLevel = (v) =>
+                    v >= RISK_THRESHOLDS.HIGH
+                        ? "High"
+                        : v >= RISK_THRESHOLDS.MEDIUM
+                          ? "Medium"
+                          : "Low";
+                return RISK_MATRIX[getLevel(lf)][getLevel(ifVal)];
             }
 
             /**
@@ -1489,9 +1393,8 @@
                     0,
                 );
 
-                updateVectors();
+                updateVectorsAndLinks();
                 updateRadarChart(tafSum, vfSum, tifSum, bifSum);
-                updateVectorLinks();
             }
 
             /**
@@ -1518,38 +1421,23 @@
             };
 
             /**
-             * Updates the displayed vector text in the UI
+             * Updates the displayed vector text and href attributes of vector links
              */
-            function updateVectors() {
+            function updateVectorsAndLinks() {
                 const fullVector = buildVector(false);
                 const shortVector = buildVector(true);
 
                 const scoreVectorText = domCache.get("scoreVectorText");
                 const shortVectorText = domCache.get("shortVectorText");
-
-                if (scoreVectorText) {
-                    scoreVectorText.textContent = fullVector;
-                }
-                if (shortVectorText) {
-                    shortVectorText.textContent = shortVector;
-                }
-            }
-
-            /**
-             * Updates the href attributes of vector links
-             */
-            function updateVectorLinks() {
-                const fullVector = buildVector(false);
-                const shortVector = buildVector(true);
                 const fullLink = domCache.get("scoreVectorLink");
                 const shortLink = domCache.get("shortVectorLink");
 
-                if (fullLink) {
+                if (scoreVectorText) scoreVectorText.textContent = fullVector;
+                if (shortVectorText) shortVectorText.textContent = shortVector;
+                if (fullLink)
                     fullLink.href = `#owasp-risk-rating-full=${fullVector}`;
-                }
-                if (shortLink) {
+                if (shortLink)
                     shortLink.href = `#owasp-risk-rating=${shortVector}`;
-                }
             }
 
             /**
